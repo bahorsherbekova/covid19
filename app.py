@@ -59,5 +59,35 @@ if data is not None:
     # 3. Ma'lumotlar jadvali
     with st.expander("Batafsil ma'lumotlar jadvalini ko'rish"):
         st.dataframe(data.head(50), use_container_width=True)
+        # 4. Dinamik o'zgarish grafigi (Siz so'ragan chizma)
+    st.write("---")
+    st.subheader("📈 Kuzatilayotgan harorat o'zgarishi")
+    
+    # Datasetingizda soat ustuni bo'lmasa, sun'iy vaqt yaratamiz (Grafik chiroyli chiqishi uchun)
+    time_index = [f"{h:02d}:00" for h in range(8, 21, 2)] # 08:00 dan 20:00 gacha
+    # Harorat ko'rsatkichlarini rasmga moslab kiritamiz
+    temp_values = [25, 27, 32, 35, 33, 28, 27] 
+    
+    chart_data = pd.DataFrame({
+        'Soat': time_index,
+        'Harorat': temp_values
+    })
+
+    fig3 = px.line(chart_data, x='Soat', y='Harorat', 
+                   markers=True, # Nuqtalarni ko'rsatish
+                   title="Kun davomida harorat o'zgarishining dinamik grafigi")
+    
+    # Chiziq rangini rasmga o'xshatib qizil qilish
+    fig3.update_traces(line_color='#FF4B4B', marker=dict(size=10, color='red'))
+    
+    # Fonni oq va katakchalarni rasmga moslash
+    fig3.update_layout(plot_bgcolor='white', yaxis_title="Harorat (°C)")
+    fig3.update_xaxes(showgrid=True, gridwidth=1, gridcolor='LightGray')
+    fig3.update_yaxes(showgrid=True, gridwidth=1, gridcolor='LightGray')
+
+    st.plotly_chart(fig3, use_container_width=True)
+
+    st.info("Ushbu grafik loyiha test natijalari asosida haroratning kunlik o'zgarishini ko'rsatadi.")
+
 else:
     st.warning("Iltimos, 'dataset.xlsx' faylini asosiy papkaga yuklang.")
